@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Personal Finance - Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Personal Finance - Spending by Category</h1>
+  <canvas id="chart" width="800" height="400"></canvas>
+
+  <script>
+    async function load() {
+      const res = await fetch('/api/reports/spending-by-category');
+      const data = await res.json();
+      const labels = data.map(d=>d.category);
+      const values = data.map(d=>d.amount);
+      const ctx = document.getElementById('chart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{ label: 'Amount (expenses positive, income negative)', data: values }]
+        },
+        options: {
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+    load();
+  </script>
+</body>
+</html>
